@@ -1,0 +1,16 @@
+1. Go to Project Settings in Unity
+2. Find the tags and layers options.
+3. Go to Layers.
+
+4.Then for each layer below type:
+User Layer 6: placementLayer
+User Layer 7: componentLayer
+User Layer 15: Building
+User Layer 16: Preview
+
+
+Also:
+1. In Project Settings, select 'Physics'.
+2. Scroll to the bottom to the 'Layer Collision Matrix'.
+3. Ensure that the 'Building' layer box is CHECKED where it intersects with itself.
+   - This allows raycasts to hit existing components and enables vertical stacking.
