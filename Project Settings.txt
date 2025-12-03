@@ -8,9 +8,9 @@ User Layer 7: componentLayer
 User Layer 15: Building
 User Layer 16: Preview
 
-5. Set to tbe on "Building" layer
+5. Set any and all components to the on "Building" layer
 6. Set level_floor to "placementLayer" layer.
-7.Make sure the "buidling placer" component in the GameManager has the placementlayer set to "placementLayer" and "Building".
+7.Make sure the "buidling placer" component in the GameManager has the placementlayer set to the "placementLayer" and "Building" layers.
 
 Also:
 1. In Project Settings, select 'Physics'.
