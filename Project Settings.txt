@@ -4,7 +4,6 @@
 
 4.Then for each layer below type:
 User Layer 6: placementLayer
-User Layer 7: componentLayer
 User Layer 15: Building
 User Layer 16: Preview
 
