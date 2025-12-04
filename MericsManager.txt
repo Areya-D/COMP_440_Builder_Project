@@ -1,0 +1,137 @@
+//Luis Baires 
+// Manages UI text for cost, carbon, and energy metrics
+//Helped by Gemini
+//test taco
+using UnityEngine;
+using TMPro;
+
+public class MetricsManager : MonoBehaviour
+{
+    // UI Text References
+    [Header("UI Text References")]
+    public TextMeshProUGUI costText;
+    public TextMeshProUGUI carbonText;
+    public TextMeshProUGUI energyText;
+
+    // Current Game Metrics (Holders for data received from BuildingManager) 
+    // These now hold the *current* state of the entire build.
+    public float currentTotalCost = 0f;
+    public float currentTotalCarbon = 0f;
+    public float currentEnergyRating = 0f;
+    
+    //  Challenge Targets (Private, set by difficulty)
+    public float costTarget;
+    public float carbonTarget;
+    public float energyTarget;
+
+
+    void Start()
+    {
+        // Load the targets based on the static difficulty integer
+        SetChallengeTargets(); 
+        
+        // Initialize UI (Shows targets, current values will be 0)
+        UpdateMetricsUI();
+    }
+    
+    //  Difficulty Setting (Challenge System Logic)
+    private void SetChallengeTargets()
+    {
+        // This function sets the target goals based on the static difficulty integer (1, 2, or 3)
+        switch (DifficultySettings.difficulty)
+        {
+            case 1: // Easy Mode
+                costTarget = 10000f;
+                carbonTarget = 500f;
+                energyTarget = 10000.0f;
+                Debug.Log("Difficulty set to Easy.");
+                break;
+                
+            case 2: // Medium Mode
+                costTarget = 5000f;
+                carbonTarget = 300f;
+                energyTarget = 5.5f;
+                Debug.Log("Difficulty set to Medium.");
+                break;
+                
+            case 3: // Hard Mode
+                costTarget = 1000f;
+                carbonTarget = 600f;
+                energyTarget = 4.5f;
+                Debug.Log("Difficulty set to Hard.");
+                break;
+
+            default: // Default case
+                costTarget = 100000f;
+                carbonTarget = 1200000f;
+                energyTarget = 100f;
+                Debug.LogWarning("Difficulty not set, defaulting to Easy.");
+                break;
+        }
+    }
+
+    //  Metric Receiving (Called by BuildingManager) 
+    // This is the function called by the BuildingManager after it recalculates all totals.
+    public void ReceiveUpdatedMetrics(float newCost, float newCarbon, float newEnergyRating)
+    {
+        // Update the public variables
+        currentTotalCost = newCost;
+        currentTotalCarbon = newCarbon;
+        currentEnergyRating = newEnergyRating;
+
+        // Update the screen display and colors
+        UpdateMetricsUI();
+    }
+    
+    //UI Update and Color Logic (Metrics Display UI)
+
+    private void UpdateMetricsUI()
+    {
+        // Update the Text Components using the current metrics and targets
+        costText.text = $"Cost: ${currentTotalCost:F2} / ${costTarget:F0}";
+        carbonText.text = $"Carbon: {currentTotalCarbon:F2} kg / {carbonTarget:F0} kg";
+        energyText.text = $"R-Value: {currentEnergyRating:F2} / {energyTarget:F2}";
+
+        // Color-Coded Feedback
+        ColorCost(currentTotalCost);
+        ColorCarbon(currentTotalCarbon);
+        ColorEnergy(currentEnergyRating);
+    }
+    
+    private void ColorCost(float current)
+    {
+        // Green if under or at budget, Red if over
+        costText.color = (current <= costTarget) ? Color.green : Color.red;
+    }
+
+    private void ColorCarbon(float current)
+    {
+        // Green if under or at limit, Red if over
+        carbonText.color = (current <= carbonTarget) ? Color.green : Color.red;
+    }
+
+    private void ColorEnergy(float current)
+    {
+        // Green if at or above target, Red if below
+        energyText.color = (current >= energyTarget) ? Color.green : Color.red;
+    }
+
+    // --- Win/Loss Check (Challenge System) ---
+    public bool CheckForWin()
+    {
+        bool costMet = currentTotalCost <= costTarget;
+        bool carbonMet = currentTotalCarbon <= carbonTarget;
+        bool energyMet = currentEnergyRating >= energyTarget;
+
+        return costMet && carbonMet && energyMet;
+    }
+    public void LoadStats(float cost, float carbon, float energy)
+    {
+        currentTotalCost = cost;
+        currentTotalCarbon = carbon;
+        currentEnergyRating = energy;
+
+        UpdateMetricsUI();   // Refreshes the on-screen numbers and colors
+    }
+
+}
